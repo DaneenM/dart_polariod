@@ -21,6 +21,7 @@ class _PolaroidState extends State<Polaroid>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  bool isPlaying = false;
 
   @override
   void initState() {
@@ -43,36 +44,51 @@ class _PolaroidState extends State<Polaroid>
 
   @override
   Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: widget.rotation,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Polaroid frame
-            Image.asset(
-              'assets/images/january.png', // Polaroid frame with tape
-              width: 200,
-              height: 240,
-              fit: BoxFit.contain,
-            ),
-            // Media content (video) positioned precisely inside the frame
-            Positioned(
-              top: 56, // Adjusted to fit inside the Polaroid frame
-              left: 45, // Align with the left edge of the inner frame
-              right:
-                  45, // Align with the right edge of the inner frame, go smaller to make wider
-              bottom:
-                  75, // Leave space for the Polaroid's bottom section, go higher to make smaller
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: widget.isVideo
-                    ? VideoPlayerWidget(videoPath: widget.mediaPath)
-                    : SizedBox(), // Fallback to empty if no video
+    return GestureDetector(
+      onTap: () {
+        if (widget.isVideo) {
+          setState(() {
+            isPlaying = !isPlaying;
+          });
+        }
+      },
+      child: Transform.rotate(
+        angle: widget.rotation,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Media content (video or image) positioned inside the frame
+              Positioned(
+                top: 45,
+                left: 37,
+                right: 37,
+                bottom: 70,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: widget.isVideo
+                      ? VideoPlayerWidget(
+                          videoPath: widget.mediaPath,
+                          autoplay: isPlaying,
+                        )
+                      : Image.asset(
+                          widget.mediaPath,
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
-            ),
-          ],
+              // Polaroid frame above the media content
+              IgnorePointer(
+                child: Image.asset(
+                  'assets/images/january.png', // Frame remains static
+                  width: 200,
+                  height: 240,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,9 +3,13 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
+  final bool autoplay;
 
-  const VideoPlayerWidget({required this.videoPath, Key? key})
-      : super(key: key);
+  const VideoPlayerWidget({
+    required this.videoPath,
+    this.autoplay = false,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
@@ -19,10 +23,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     super.initState();
     _controller = VideoPlayerController.asset(widget.videoPath)
       ..initialize().then((_) {
-        setState(() {}); // Update UI when video is ready
-      })
-      ..setLooping(true)
-      ..play(); // Autoplay the video
+        setState(() {}); // Rebuild when video is ready
+        if (widget.autoplay) {
+          _controller.play();
+        }
+      });
+  }
+
+  @override
+  void didUpdateWidget(covariant VideoPlayerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.autoplay != oldWidget.autoplay) {
+      if (widget.autoplay) {
+        _controller.play();
+      } else {
+        _controller.pause();
+      }
+    }
   }
 
   @override
@@ -38,6 +55,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             aspectRatio: _controller.value.aspectRatio,
             child: VideoPlayer(_controller),
           )
-        : const Center(child: CircularProgressIndicator()); // Loading indicator
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
