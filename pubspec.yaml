@@ -1,0 +1,30 @@
+name: polaroid_project
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.5.0
+  cupertino_icons: ^1.0.8
+  flutter_staggered_animations: ^1.1.0
+  video_player: ^2.6.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/polaroid_tape3.png
+    - assets/images/sample_photo.png
+    - assets/videos/january.mp4
+    
+
