@@ -17,25 +17,16 @@ class WallScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Title at the top of the screen
+            // Title image centered at the top
             Positioned(
               top: 40, // Adjusted to make room for the title
-              left: 50,
-              child: Text(
-                'Our One Year',
-                style: TextStyle(
-                  fontFamily:
-                      'RomanticFont', // Use your desired font for romantic letters
-                  fontSize: 40,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.5),
-                      offset: Offset(3, 3),
-                      blurRadius: 5,
-                    ),
-                  ],
-                ),
+              left: MediaQuery.of(context).size.width *
+                  0.25, // Centered horizontally
+              child: Image.asset(
+                'assets/images/home.png', // Title image path
+                width: MediaQuery.of(context).size.width *
+                    0.5, // Adjust width as needed
+                height: 100, // Adjust height as needed
               ),
             ),
             // First row of frames
