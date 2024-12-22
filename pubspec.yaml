@@ -27,4 +27,5 @@ flutter:
     - assets/images/sample_photo.png
     - assets/images/january.png
     - assets/videos/january.mp4
+    -  assets/images/background.png
 

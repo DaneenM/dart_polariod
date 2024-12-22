@@ -8,7 +8,13 @@ class WallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color(0xFFe0d4c1), // Beige wall background
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image:
+                AssetImage('assets/images/background.png'), // Background image
+            fit: BoxFit.cover, // Ensures the image covers the entire screen
+          ),
+        ),
         child: Stack(
           children: [
             Positioned(
