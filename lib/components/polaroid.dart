@@ -63,26 +63,33 @@ class _PolaroidState extends State<Polaroid>
             children: [
               // Media content (video or image) positioned inside the frame
               Positioned(
-                top: 45,
-                left: 37,
-                right: 37,
-                bottom: 70,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: widget.mediaPath.isEmpty
-                      ? Center(
-                          child: Text(
-                              'No Media Assigned')) // Show message if no media
-                      : widget.isVideo
-                          ? VideoPlayerWidget(
-                              videoPath: widget.mediaPath,
-                              autoplay: isPlaying,
-                            )
-                          : Image.asset(
-                              widget.mediaPath,
-                              fit: BoxFit.cover,
+                top: 34,
+                left: 29,
+                right: 23,
+                bottom: 40,
+                child: widget.mediaPath.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No Media Assigned',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ) // Show message if no media
+                    : widget.isVideo
+                        ? VideoPlayerWidget(
+                            videoPath: widget.mediaPath,
+                            autoplay: isPlaying,
+                          )
+                        : Container(
+                            width: widget.size, // Set the image size
+                            height: widget.size * 1.2, // Adjust image height
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(widget.mediaPath),
+                                fit: BoxFit.cover,
+                              ),
+                              // No borderRadius here to maintain pointy edges
                             ),
-                ),
+                          ),
               ),
               // Polaroid frame above the media content
               IgnorePointer(

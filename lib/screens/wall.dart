@@ -1,5 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'package:polaroid_project/components/polaroid.dart';
+
+class FullScreenVideoPlayer extends StatefulWidget {
+  final String videoPath;
+
+  const FullScreenVideoPlayer({Key? key, required this.videoPath})
+      : super(key: key);
+
+  @override
+  _FullScreenVideoPlayerState createState() => _FullScreenVideoPlayerState();
+}
+
+class _FullScreenVideoPlayerState extends State<FullScreenVideoPlayer> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset(widget.videoPath)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Full Screen Video'),
+        backgroundColor: Colors.black,
+      ),
+      body: Center(
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
+        ),
+      ),
+    );
+  }
+}
 
 class WallScreen extends StatelessWidget {
   const WallScreen({Key? key}) : super(key: key);
@@ -17,27 +69,38 @@ class WallScreen extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Title image centered at the top
+            // Title at the top of the screen (image title)
             Positioned(
               top: 40, // Adjusted to make room for the title
-              left: MediaQuery.of(context).size.width *
-                  0.25, // Centered horizontally
+              left: 50,
               child: Image.asset(
-                'assets/images/home.png', // Title image path
-                width: MediaQuery.of(context).size.width *
-                    0.5, // Adjust width as needed
-                height: 100, // Adjust height as needed
+                'assets/images/home_title.png', // The title image
+                width:
+                    350, // Adjust the width of the title to make it fit better
               ),
             ),
-            // First row of frames
+            // First row of frames (video in first frame goes full screen on tap)
             Positioned(
               left: 25, // Moved more to the left for centering
               top: 120, // Moved down a bit for spacing
-              child: Polaroid(
-                mediaPath: 'assets/videos/january.mp4', // January video
-                isVideo: true,
-                rotation: -0.05,
-                size: 105, // Adjusted size for larger frame
+              child: GestureDetector(
+                onTap: () {
+                  // This is where the full-screen functionality will trigger
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullScreenVideoPlayer(
+                        videoPath: 'assets/videos/january.mp4', // January video
+                      ),
+                    ),
+                  );
+                },
+                child: Polaroid(
+                  mediaPath: 'assets/videos/january.mp4', // January video
+                  isVideo: true,
+                  rotation: -0.05,
+                  size: 105, // Adjusted size for larger frame
+                ),
               ),
             ),
             Positioned(
