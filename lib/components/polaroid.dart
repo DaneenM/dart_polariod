@@ -5,11 +5,13 @@ class Polaroid extends StatefulWidget {
   final String mediaPath;
   final bool isVideo;
   final double rotation;
+  final double size; // Added size parameter for dynamic resizing
 
   const Polaroid({
     required this.mediaPath,
     this.isVideo = false,
     this.rotation = 0.0,
+    this.size = 70, // Default size
     Key? key,
   }) : super(key: key);
 
@@ -67,23 +69,28 @@ class _PolaroidState extends State<Polaroid>
                 bottom: 70,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: widget.isVideo
-                      ? VideoPlayerWidget(
-                          videoPath: widget.mediaPath,
-                          autoplay: isPlaying,
-                        )
-                      : Image.asset(
-                          widget.mediaPath,
-                          fit: BoxFit.cover,
-                        ),
+                  child: widget.mediaPath.isEmpty
+                      ? Center(
+                          child: Text(
+                              'No Media Assigned')) // Show message if no media
+                      : widget.isVideo
+                          ? VideoPlayerWidget(
+                              videoPath: widget.mediaPath,
+                              autoplay: isPlaying,
+                            )
+                          : Image.asset(
+                              widget.mediaPath,
+                              fit: BoxFit.cover,
+                            ),
                 ),
               ),
               // Polaroid frame above the media content
               IgnorePointer(
                 child: Image.asset(
-                  'assets/images/january.png', // Frame remains static
-                  width: 200,
-                  height: 240,
+                  'assets/images/january.png', // The static frame image
+                  width: widget.size, // Set dynamic frame size
+                  height:
+                      widget.size * 1.2, // Adjust frame height for aesthetics
                   fit: BoxFit.contain,
                 ),
               ),
